@@ -1,0 +1,25 @@
+{% extends '../landing/main.html' %}
+{% block title %} Вход в аккаунт {% endblock %}
+{% block span %} {% endblock %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="../../static/register/style.css">
+
+    <div class="container">
+        <h2>Вход в аккаунт</h2>
+        <form method="post" action="{% url 'login_user' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                <div class="form-group">
+                    {% for field in form %}
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                    {% endfor %}
+                </div>
+            </table>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Войти в аккаунт</button>
+            </div>
+        </form>
+        {{ error }}
+    </div>
+{% endblock %}

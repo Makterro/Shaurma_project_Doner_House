@@ -1,0 +1,51 @@
+{% extends '../landing/main.html' %}
+
+{% load static %}
+{% load sass_tags %}
+
+{% block title %}
+    Выполнение платежа
+{% endblock %}
+{% block span %} {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shoping/cart_style.css' %}">
+
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+
+    <h1>Оплата заказа</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Количество</th>
+            <th>Размер порции</th>
+            <th>Цена за 1 порцию</th>
+            <th>Стоимость</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in cart_items %}
+            <tr>
+                <td>{{ item.id_food.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.price_per_item }} руб.</td>
+                <td>{{ item.total_price }} руб.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p>Сумма заказа: {{ total_price }}</p>
+    <form method="post" action="{% url 'purchase' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="payment_amount">Введите сумму платежа:</label>
+        <input type="number" name="payment" id="payment_amount">
+        <input type="submit" value="Оплатить">
+    </form>
+    <a class="href-btn" href="/shoping/cart">Назад</a>
+
+{% endblock %}

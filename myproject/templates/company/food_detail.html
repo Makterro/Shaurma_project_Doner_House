@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Карточка еды</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>Название</td>
+        <td>{{ food.name }}</td>
+    </tr>
+    <tr>
+        <td>Ингредиенты</td>
+        <td>{{ food.ingredients }}</td>
+    </tr>
+    <tr>
+        <td>Видимость в продажах</td>
+        <td>{{ food.visibility }}</td>
+    </tr>
+    <tr>
+        <td>Фото</td>
+        <td> <img width="200" src="{{ food.photo.url }}"> </td>
+    </tr>
+    <tr>
+        <td>Категория</td>
+        <td>{{ food.category }}</td>
+    </tr>
+    <tr>
+        <td>Стоимость мини</td>
+        <td>{{ food.mini }}</td>
+    </tr>
+    <tr>
+        <td>Граммовка мини</td>
+        <td>{{ food.mini_gram }}</td>
+    </tr>
+    <tr>
+        <td>Стоимость средней</td>
+        <td>{{ food.medium }}</td>
+    </tr>
+    <tr>
+        <td>Граммовка средней</td>
+        <td>{{ food.medium_gram }}</td>
+    </tr>
+    <tr>
+        <td>Стоимость мега</td>
+        <td>{{ food.mega }}</td>
+    </tr>
+    <tr>
+        <td>Граммовка мега</td>
+        <td>{{ food.mega_gram }}</td>
+    </tr>
+    <tr>
+        <td>Единица измерения</td>
+        <td>{{ food.value }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <a href="/company/food/edit/{{ food.id }}/">Изменить карточку еды</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <a href="/company/food/remove/{{ food.id }}/">Убрать еду с продажи</a>
+            <a href="/company/food/undo_remove/{{ food.id }}/">Вернуть еду с продажи</a>
+        </td>
+    </tr>
+
+</table>
+</body>
+</html>

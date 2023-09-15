@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Успешная покупка</title>
+</head>
+<body>
+{% block content %}
+    <h1>Покупка успешно завершена</h1>
+    <p>Сумма заказа: {{ purchase.total_price }}</p>
+    <p>Дата создания: {{ purchase.date_created }}</p>
+    <h2>Товары:</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Название блюда</th>
+            <th>Размер</th>
+            <th>Количество</th>
+            <th>Цена за штуку</th>
+            <th>Итоговая стоимость</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in purchase.purchaseitem_set.all %}
+            <tr>
+                <td>{{ item.food.name }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.total_price }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,31 @@
+.userslist tbody tr {
+    background: black;
+    color: #ffffff;
+    height: 50px;
+    cursor: pointer;
+}
+
+.userslist tbody tr {
+    transition: all 0.5s ease
+}
+
+.userslist tbody tr:hover {
+    background: lightgrey;
+    color: black;
+}
+
+.block-pagination ul li {
+    padding: 5px;
+    border: 1px solid #3b729f;
+    width: 38px;
+    text-align: center;
+}
+
+.block-pagination ul li:hover {
+    background: #3b729f;
+    cursor: pointer;
+}
+
+.block-pagination ul li a {
+    padding: 8px 12px 8px 10px;
+}

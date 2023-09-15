@@ -1,0 +1,66 @@
+/* Центрирование содержимого блока .food-info */
+.food-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Фото блюда */
+.food-image img {
+  max-width: 90%;
+  height: auto;
+  margin-right: 1px;
+  padding-left: 20px;
+}
+
+/* Текст и выбор порции */
+.food-details {
+  max-width: 50%;
+}
+
+/* Заголовок */
+.food-details h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Описание ингредиентов */
+.food-details p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+/* Секция с выбором порции и цены */
+.food-prices {
+  margin-bottom: 1rem;
+}
+
+/* Каждый вариант цены */
+.price-option {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Радио-кнопки выбора порции */
+.price-option input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+/* Кнопка добавления в корзину */
+button[type="submit"] {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* Сообщение об ошибке */
+.food-details h4 {
+  color: red;
+  margin-top: 1rem;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация админа</title>
+    <link rel="stylesheet" type="text/css" href="../../static/register/style.css">
+</head>
+<body>
+<div class="container">
+<h2>Авторизация админа</h2>
+    <div class="form-group">
+        <h3>Это служебная часть сайта. Пожалуйста, перейдите на главную страницу.</h3>
+        <a class="green-button" href="/">Перейти на главную страницу</a>
+
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form %}
+                <tr>
+                    <td>{{ field.label }}</td>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <button type="submit">Войти</button>
+        </div>
+        {# todo доделать, чтоб выводилась именно сюда ошибка, если авторизуется не админ#}
+        {{ error }}
+    </form>
+</div>
+
+</div>
+
+</form>
+</body>
+</html>

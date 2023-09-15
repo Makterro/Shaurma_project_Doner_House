@@ -1,0 +1,42 @@
+{% extends '../landing/main.html' %}
+{% block title %} Регистрация пользователя {% endblock %}
+{% block span %} {% endblock %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="../../static/register/style.css">
+<div class="container">
+    <h2>Форма Регистрации</h2>
+    <form method="post" action="{% url 'register_user' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label>Введите код с картинки:</label>
+            <div class="captcha-container">
+                <canvas id="myCanvas" width="150" height="60"></canvas>
+                <input type="text" name="captcha" placeholder="Введите код">
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+
+    {{error}}
+</div>
+
+<script type="text/javascript" src="../../static/register/captcha.js"></script>
+
+<script type="text/javascript">
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext("2d");
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "red";
+    ctx.textAlign = "center";
+    ctx.fillText("{{ captcha }}", canvas.width / 2, canvas.height / 1.5)
+</script>
+
+{% endblock %}

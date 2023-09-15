@@ -1,0 +1,96 @@
+{% load static %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Doner house {% endblock %}</title>
+    <link href="{% sass_src 'landing/main_style.scss' %}" rel="stylesheet" type="text/css"/>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+            integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+            crossorigin="anonymous"
+    >
+
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+</head>
+<body>
+<div class="wrapper">
+    <div class="content">
+            <header class="header" >
+                <a href="/">
+                    <h1 style="color: white">Doner house</h1>
+                </a>
+                {% if user.is_authenticated %}
+                    <h4 style="color: white">Приветствуем, {{ user }}</h4>
+                {% endif %}
+
+                <!-- Кнопка для открытия модального окна -->
+                <a class="register-btn" href="#" id="modal-btn">Мой аккаунт</a>
+                <!-- Модальное окно -->
+                <div id="modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        {% if user.is_authenticated %}
+                            <div class="cart">
+                                <a class="register-btn" href="/shoping/cart">Корзина</a>
+                                {% block span %}<span class="cart-count">{{ cart_items_count }}</span>{% endblock %}
+                            </div>
+                            <a class="register-btn" href="/shoping/list">Мои покупки</a>
+                            <a class="register-btn" href="/register/logout">Выход из аккаунта</a>
+                        {% else %}
+                            <a class="register-btn" href="/register/login">Вход в личный кабинет</a>
+                            <a class="register-btn" href="/register">Регистрация</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </header>
+
+                {% block content %}
+                    {% for category_dict in category_list %}
+                        <div class="container" style="padding: 10px">
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-content-center">
+                                    <h2 style="background: darkgrey; padding: 10px">{{ category_dict.category.name }}</h2>
+                                </div>
+                            </div>
+                            <div class="row" style="background: black; padding:10px">
+                                {% for food in category_dict.food %}
+                                    <div class="col-md-4 mb-4" style="padding-top: 10px">
+                                        <div class="card h-100" style="background: darkgray; padding: 10px">
+                                            <img class="card-img" src="{{ food.photo.url }}" alt="{{ food.name }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ food.name }}</h5>
+                                                <p class="card-text">От {{ food.mini }} руб.</p>
+                                                <a href="{% url 'landing_food_detail' food.id %}"
+                                                   class="btn btn-primary stretched-link" >Добавить
+                                                    в
+                                                    корзину</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <button id="scroll-to-top" onclick="scrollToTop()">Наверх</button>
+                {% endblock %}
+        </div>
+
+<footer class="footer">
+    <ul>
+        <li><a class="a_end" href="#">О нас</a></li>
+        <li><a class="a_end" href="/contacts">Контакты</a></li>
+        <li><a class="a_end" href="/employment">Вакансии</a></li>
+        <li><a class="a_end" href="#">Обратная связь</a></li>
+    </ul>
+</footer>
+</div>
+
+<script type="text/javascript" src="../../static/landing/main.js"></script>
+
+</body>
+</html>

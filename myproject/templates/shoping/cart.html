@@ -1,0 +1,46 @@
+{% extends 'landing/main.html' %}
+
+{% load static %}
+{% load sass_tags %}
+
+{% block title %}
+    Корзина
+{% endblock %}
+{% block span %} {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shoping/cart_style.css' %}">
+    <div class="centerred-table">
+        <h2>Ваша корзина</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Количество</th>
+                <th>Размер порции</th>
+                <th>Цена за 1 порцию</th>
+                <th>Стоимость</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.id_food.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>{{ item.price_per_item }} руб.</td>
+                    <td>{{ item.total_price }} руб.</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4">Итого:</td>
+                <td>{{ total_price }} руб.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="centered-buttons">
+        <a class="href-btn" href="/">Назад</a>
+        <a class="href-btn" href="/shoping/purchase">Перейти к оплате</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение статуса заказа</title>
+</head>
+<body>
+<h1>Изменить статус заказа #{{ purchase.id }}</h1>
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="status">Статус:</label>
+        <select name="status" id="status">
+            {% for choice in unit_choices %}
+                <option value="{{ choice.0 }}"
+                        {% if choice.0 == purchase.status %}selected{% endif %}>{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit">Сохранить</button>
+</form>
+</body>
+</html>

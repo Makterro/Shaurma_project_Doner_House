@@ -1,0 +1,323 @@
+{% extends '../company/company.html' %}
+
+{% load static %}
+{% load sass_tags %}
+
+{% block title %}
+    <title>Управление заказами</title>
+{% endblock %}
+
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'company/edit_purchaice.css' %}">
+    <h1 class="zakaz"> Панель Заказов</h1>
+
+    <table class="orders-table">
+        <thead>
+        <tr>
+            <th>Заказ</th>
+            <th>Дата создания</th>
+            <th>Пользователь</th>
+            <th>Итоговая цена</th>
+            <th>Статус</th>
+            <th>Изменить статус</th>
+        </tr>
+        </thead>
+        <tbody class="orders-body">
+        {% for purchase in purchases %}
+            <tr class="order-row" data-id="{{ purchase.id }}">
+                <td>{{ purchase.id }}</td>
+                <td>{{ purchase.date_created }}</td>
+                <td>{{ purchase.user }}</td>
+                <td>{{ purchase.total_price }}</td>
+                <td class="order-status">{{ purchase.get_status_display }}</td>
+                <td>
+                    <button class="status-btn" data-id="{{ purchase.id }}" data-status="start">Перевести в обработку
+                    </button>
+                    <button class="status-btn" data-id="{{ purchase.id }}" data-status="cooking">Начать готовить
+                    </button>
+                    <button class="status-btn" data-id="{{ purchase.id }}" data-status="ready">Готов</button>
+                    <button class="status-btn" data-id="{{ purchase.id }}" data-status="success">Подтвердить завершение
+                    </button>
+                    <button class="status-btn" data-id="{{ purchase.id }}" data-status="cancel">Отменить заказ</button>
+                </td>
+            </tr>
+            <tr class="order-details-row">
+                <td colspan="6">
+                    <details>
+                        <summary>Состав заказа</summary>
+                        <table class="order-details-table">
+                            <thead>
+                            <tr>
+                                <th>Наименование</th>
+                                <th>Количество</th>
+                                <th>Цена</th>
+                                <th>Размер</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in purchase.purchaseitem_set.all %}
+                                <tr>
+                                    <td>{{ item.food.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.size }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </details>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+
+    {#    #}
+
+
+    <table class="orders-table">
+        <thead>
+        <tr>
+            <th>Заказ</th>
+            <th>Дата создания</th>
+            <th>Пользователь</th>
+            <th>Итоговая цена</th>
+            <th>Статус</th>
+            <th>Изменить статус</th>
+        </tr>
+        </thead>
+        <tbody class="orders-body">
+        <tr class="order-row" data-id="450">
+            <td>450</td>
+            <td>346346363btrthtrt</td>
+            <td>tnjnyjtnyj</td>
+            <td>rtnhbrhrthvrh</td>
+            <td class="order-status">{{ purchase.get_status_display }}</td>
+            <td>
+                <button class="status-btn" data-id="450}" data-status="start">Перевести в обработку
+                </button>
+                <button class="status-btn" data-id="450" data-status="cooking">Начать готовить
+                </button>
+                <button class="status-btn" data-id="450" data-status="ready">Готов</button>
+                <button class="status-btn" data-id="450" data-status="success">Подтвердить завершение
+                </button>
+                <button class="status-btn" data-id="450" data-status="cancel">Отменить заказ</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {#    #}
+
+
+    <style>
+        .loading-icon {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 8%;
+            background-color: rgba(255, 255, 0, 0.52);
+            z-index: 9999;
+            font-size: 30px;
+            text-align: center;
+        }
+    </style>
+
+    <div class="loading-icon">Загрузка...</div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            var csrfToken = Cookies.get('csrftoken');
+
+            function updateStatus(purchase_id, status) {
+                var deferred = $.Deferred();
+                $.ajax({
+                    url: '{% url "processing_update_admin" %}',
+                    type: 'POST',
+                    data: {'purchase_id': purchase_id, 'status': status},
+                    dataType: 'json',
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    },
+                    success: function (response) {
+                        if (response.status == 'ok') {
+                            console.log('Изменение заказа завершено!');
+                            deferred.resolve(response);
+                        } else {
+                            deferred.reject('Ошибка при обновлении статуса заказа');
+                        }
+                    },
+
+                });
+                return deferred;
+            }
+
+            $('.status-btn').click(function () {
+                var purchase_id = $(this).data('id');
+                var status = $(this).data('status');
+                $('.loading-icon').show();
+                $('tr[data-id="' + purchase_id + '"]').addClass('loading');
+
+                updateStatus(purchase_id, status)
+                    .done(function (response) {
+                        $('.loading-icon').hide();
+                        $('tr[data-id="' + purchase_id + '"] .order-status').text(response.new_status);
+                        $('tr[data-id="' + purchase_id + '"]').removeClass('loading').addClass('success');
+                        setTimeout(function () {
+                            $('tr[data-id="' + purchase_id + '"]').removeClass('success');
+                        }, 1000);
+                    })
+                    .fail(function (error) {
+                        console.log(error);
+                        $('.loading-icon').hide();
+                        $('tr[data-id="' + purchase_id + '"]').removeClass('loading').addClass('error');
+                        setTimeout(function () {
+                            $('tr[data-id="' + purchase_id + '"]').removeClass('error');
+                        }, 1000);
+                    });
+            });
+        });
+    </script>
+
+
+
+
+
+
+    {#    <script>#}
+    {#        $(document).ready(function () {#}
+    {#            var csrfToken = Cookies.get('csrftoken');#}
+    {##}
+    {#            function beforeStart(defObj, purchase_id, status) {#}
+    {#                console.log('before start');#}
+    {#                console.log(this);#}
+    {#                console.log(defObj);#}
+    {##}
+    {#                var request = $.ajax({#}
+    {#                    url: '{% url "processing_update_admin" %}',#}
+    {#                    type: 'POST',#}
+    {#                    data: {'purchase_id': purchase_id, 'status': status},#}
+    {#                    dataType: 'json',#}
+    {#                    beforeSend: function (xhr, settings) {#}
+    {#                        xhr.setRequestHeader("X-CSRFToken", csrfToken);#}
+    {#                    }#}
+    {#                });#}
+    {##}
+    {#                return request;#}
+    {#            }#}
+    {##}
+    {#            $('.status-btn').click(function () {#}
+    {#                var purchase_id = $(this).data('id');#}
+    {#                var status = $(this).data('status');#}
+    {##}
+    {#                var dfd = $.Deferred(function (defObj) {#}
+    {#                    var request = beforeStart(defObj, purchase_id, status);#}
+    {##}
+    {#                    request.done(function (response) {#}
+    {#                        if (response.status == 'ok') {#}
+    {#                            $('tr[data-id="' + purchase_id + '"] td.status').text(response.new_status);#}
+    {#                            console.log('Изменение заказа завершено!');#}
+    {#                            defObj.resolve(); // Разрешение Deferred объекта#}
+    {#                        }#}
+    {#                    });#}
+    {##}
+    {#                    request.fail(function (jqXHR, textStatus) {#}
+    {#                        console.log('Ошибка запроса!', textStatus);#}
+    {#                        defObj.reject(); // Отклонение Deferred объекта в случае ошибки#}
+    {#                    });#}
+    {##}
+    {#                    request.always(function (msg) {#}
+    {#                        console.log('Запрос выполнен!', msg);#}
+    {#                    });#}
+    {#                });#}
+    {##}
+    {#                $.when(dfd).done(function () {#}
+    {#                    // Действия после успешного выполнения AJAX-запроса#}
+    {#                    console.log('в when');#}
+    {##}
+    {#                }).fail(function () {#}
+    {#                    // Действия в случае ошибки AJAX-запроса#}
+    {#                    console.log('в фэйл');#}
+    {#                });#}
+    {#            });#}
+    {#        });#}
+    {#    </script>#}
+    {##}
+    {#        <script>#}
+    {#            $(document).ready(function () {#}
+    {##}
+    {#                var csrfToken = Cookies.get('csrftoken');#}
+    {##}
+    {#                $('.status-btn').click(function () {#}
+    {#                    var purchase_id = $(this).data('id');#}
+    {#                    var status = $(this).data('status');#}
+    {#                    $.ajax({#}
+    {#                        url: '{% url "processing_update_admin" %}',#}
+    {#                        type: 'POST',#}
+    {#                        data: {'purchase_id': purchase_id, 'status': status},#}
+    {#                        dataType: 'json',#}
+    {##}
+    {#                        beforeSend: function (xhr, settings) {#}
+    {#                            xhr.setRequestHeader("X-CSRFToken", csrfToken);#}
+    {#                        },#}
+    {#                        success: function (response) {#}
+    {#                            if (response.status == 'ok') {#}
+    {#                                // обновляем статус заказа на странице#}
+    {#                                $('tr[data-id="' + purchase_id + '"] td.status').text(response.new_status);#}
+    {#                                console.log('Изменение заказа завершено!');#}
+    {#                            }#}
+    {#                        }#}
+    {#                    });#}
+    {#                });#}
+    {#            });#}
+    {#        </script>#}
+
+    {#    <script>#}
+    {#        $(document).ready(function () {#}
+    {##}
+    {#            var csrfToken = Cookies.get('csrftoken');#}
+    {##}
+    {#            $('.status-btn').click(function () {#}
+    {#                var purchase_id = $(this).data('id');#}
+    {#                var status = $(this).data('status');#}
+    {##}
+    {#                $.ajax({#}
+    {#                    url: '{% url "processing_update_admin" %}',#}
+    {#                    type: 'POST',#}
+    {#                    data: {'purchase_id': purchase_id, 'status': status},#}
+    {#                    dataType: 'json',#}
+    {##}
+    {#                    beforeSend: function (xhr, settings) {#}
+    {#                        xhr.setRequestHeader("X-CSRFToken", csrfToken);#}
+    {#                    }#}
+    {#                }).done(function (response) {#}
+    {#                    if (response.status == 'ok') {#}
+    {#                        // обновляем статус заказа на странице#}
+    {#                        $('tr[data-id="' + purchase_id + '"] td.status').text(response.new_status);#}
+    {#                        console.log('Изменение заказа завершено!');#}
+    {#                    }#}
+    {#                }).fail(function (msg) {#}
+    {#                    console.log('Ошибка запроса!', msg);#}
+    {#                }).always(function (msg) {#}
+    {#                    console.log('Запрос выполнен!', msg);#}
+    {#                });#}
+    {#            });#}
+    {#        });#}
+    {#    </script>#}
+
+
+
+{% endblock %}

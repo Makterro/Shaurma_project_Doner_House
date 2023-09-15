@@ -1,0 +1,20 @@
+{% extends '../landing/main.html' %}
+{% block title %} Детализация заказа {% endblock %}
+{% block span %} {% endblock %}
+{% block content %}
+    <h1>Заказ №{{ purchase.id }}</h1>
+    <p>Дата создания: {{ purchase.date_created }}</p>
+    <h3>{{ purchase.get_status_display }}</h3>
+    <h2>Состав заказа:</h2>
+    {% if purchase_items %}
+        <ul>
+            {% for purchase_item in purchase_items %}
+                <li>{{ purchase_item.food.name }} - {{ purchase_item.quantity }} шт. - {{ purchase_item.price }}
+                    руб.
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>В заказе нет товаров.</p>
+    {% endif %}
+{% endblock %}

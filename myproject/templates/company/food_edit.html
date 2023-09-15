@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение еды</title>
+</head>
+<body>
+<table>
+    <form method="post" action="{% url 'food_save' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ form.id }}">
+        {% for field in form %}
+            <tr>
+                <td><b>{{ field.label }}</b></td>
+                <td>{{ field }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="2">
+                <button type="submit">Сохранить</button>
+            </td>
+        </tr>
+    </form>
+</table>
+
+</body>
+</html>

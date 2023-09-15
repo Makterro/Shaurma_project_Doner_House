@@ -1,0 +1,45 @@
+<link rel="stylesheet" type="text/css" href="../../../static/company/main_style.css">
+{#todo Что делать, сверху приходится еще раз подклчюать#}
+{% extends '../landing/main.html' %}
+{% block title %} food.name {% endblock %}
+{% block span %} {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="../../../static/landing/detail_style.css">
+    <div class="food-info">
+        <div class="food-image">
+            <img src="{{ food.photo.url }}" alt="{{ food.name }}">
+        </div>
+        <div class="food-details">
+            <h1 class="food-name">{{ food.name }}</h1>
+            <p class="food-ingredients">{{ food.ingredients }}</p>
+            <form class="food-form" action="{% url 'add_to_cart' pk=food.id %}" method="POST">
+                {% csrf_token %}
+                <div class="food-prices">
+                    <div class="price-option">
+                        <input type="radio" name="portion" value="mini">
+                        <label for="mini">Мини {{ food.mini_gram }} {{ food.get_value_display }}
+                            за {{ food.mini }} руб.
+                             </label>
+                    </div>
+                    <div class="price-option">
+                        <input type="radio" name="portion" value="medium">
+                        <label for="medium">Средняя {{ food.medium_gram }} {{ food.get_value_display }}
+                            за {{ food.medium }} руб.
+                             </label>
+                    </div>
+                    <div class="price-option">
+                        <input type="radio" name="portion" value="mega">
+                        <label for="mega">Мега {{ food.mega_gram }} {{ food.get_value_display }} за
+                            {{ food.mega }} руб. </label>
+                    </div>
+                    <input type="hidden" name="food_id" value="{{ food.id }}">
+                </div>
+
+                {{ form.as_p }}
+                <button class="food-add-to-cart" type="submit">Добавить в корзину</button>
+                <h4 class="food-error">{{ error_message }}</h4>
+            </form>
+        </div>
+    </div>
+{% endblock %}

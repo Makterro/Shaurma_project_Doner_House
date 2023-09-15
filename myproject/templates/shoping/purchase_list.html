@@ -1,0 +1,35 @@
+{% extends '../landing/main.html' %}
+{% block title %} Мои заказы {% endblock %}
+{% block span %} {% endblock %}
+{% block content %}
+    <h1>Мои заказы</h1>
+
+    {% if purchases %}
+        <ul>
+            {% for purchase in purchases %}
+                <li><a href="{% url 'purchase_detail' purchase.id %}">{{ purchase.date_created }}</a></li>
+            {% endfor %}
+        </ul>
+        {% if is_paginated %}
+            <div class="pagination">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; первая</a>
+              <a href="?page={{ page_obj.previous_page_number }}">&lsaquo; предыдущая</a>
+          {% endif %}
+
+            <span class="current-page">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+          </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">следующая &rsaquo;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+            {% endif %}
+        </span>
+            </div>
+        {% endif %}
+    {% else %}
+        <p>У вас нет заказов.</p>
+    {% endif %}
+{% endblock %}

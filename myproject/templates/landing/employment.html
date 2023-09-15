@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница с трудоустройством</title>
+</head>
+<body>
+<h1>Трудоустройство</h1>
+<a href="{{ file_url }}">Скачать файл</a>
+<p class="bigfile-load-status"></p>
+
+<div class="row p-1">
+    <div class="col-md-6 p-3">
+        <button id="load-bigfile" class="btn btn-info">
+            Загрузить большой файл
+        </button>
+    </div>
+    <div class="col-md-6 p-3">
+        <p class="bigfile-load-status1"></p>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        var request = $.ajax({
+            type: "GET",
+            url: "/check_file_status/",
+            dataType: "json",
+            cache: false
+        });
+
+        request.done(function (response) {
+            $('p.bigfile-load-status').text('Файл готов к скачиванию');
+            console.log(response);
+        });
+
+        request.fail(function () {
+            $('p.bigfile-load-status').text('Файл не загружен');
+            console.log('Ошибка при проверке статуса файла');
+        });
+
+        request.always(function () {
+            $('p.bigfile-load-status').append(' ...Готово');
+        });
+    });
+</script>
+
+<script>
+
+    $('#load-bigfile').click(function () {
+        $.ajax({
+            type: "GET",
+            url: "http://activemap.ikit.sfu-kras.ru/public/geojson-layers/ndvi2019-05-04.geojson",
+            dataType: "script",
+            cache: false
+        }).done(function (data) {
+            $('p.bigfile-load-status').text('Загружено');
+            console.log(ndvi);
+        }).fail(function (err) {
+            $('p.bigfile-load-status').text('Не загружено');
+            console.log(err);
+        }).always(function () {
+            $('p.bigfile-load-status').append(' ...Done ');
+        });
+    });
+</script>
+
+</body>
+</html>
